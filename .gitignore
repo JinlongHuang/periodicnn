@@ -1,3 +1,5 @@
-qm/
-data/**/*
+venv_tsf/
+data/
 LTSF-Linear/
+.DS_Store
+__pycache__
