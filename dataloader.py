@@ -22,18 +22,29 @@ def load_data() -> dict[list[tuple[torch.Tensor, torch.Tensor]]]:
         Each y is a sequence of log returns:
             y_t = ln(price_t / price_{t - target_interval})
     """
+
+    with open('config.json', 'r') as f:
+        config = json.load(f)
+        preprocess = config['data']['preprocess']
     pt_file = 'data/train_data.pt'
-    if os.path.exists(pt_file):
+    if os.path.exists(pt_file) and not preprocess:
         start_time = time()
         train = torch.load('data/train_data.pt')
         val = torch.load('data/val_data.pt')
         test = torch.load('data/test_data.pt')
-        print(f'Loaded data in {time() - start_time:.2f} seconds')
+        print(f'Loaded bateched data in {time() - start_time:.2f} seconds')
         return train, val, test
     else:
         start_time = time()
+        print('Preprocessing data...')
         _save_batched_data()
-        print(f'Saved data in {time() - start_time:.2f} seconds')
+        print(f'Preprocessed and saved batched data in \
+                {time() - start_time:.2f} seconds')
+        with open('config.json', 'r') as f:
+            config = json.load(f)
+            config['data']['preprocess'] = False
+        with open('config.json', 'w') as f:
+            json.dump(config, f, indent=4)
         return load_data()
 
 
@@ -47,13 +58,18 @@ def _save_batched_data():
         target_len = out_seq_len * target_interval
         train_end_unix = config['data']['train_end_unix']
         val_end_unix = config['data']['val_end_unix']
+        assets = config['data']['assets_for_preprocess']
 
     train_data = dict()
+    train_unix = dict()
     val_data = dict()
+    val_unix = dict()
     test_data = dict()
     for entry in os.scandir('data/'):
         asset = entry.name[:-4]
         if not entry.is_dir():
+            continue
+        if (assets != ['all'] and (asset not in assets)):
             continue
         raw_file = f'{entry.path}/raw.parquet'
 
@@ -61,6 +77,7 @@ def _save_batched_data():
         if df.filter(df['close'] <= 0).height > 0:
             raise ValueError("Close price must be positive")
 
+        # Calculate log returns
         df = df.with_columns(
                 np.log(df['close'] / df['close'].shift(n=1, fill_value=1)
                        ).alias('log_ret_x'))
@@ -68,12 +85,14 @@ def _save_batched_data():
                 np.log(df['close'] / df['close'].shift(
                     n=target_interval, fill_value=1)
                        ).alias('log_ret_y'))
-        df = df.tail(df.height - target_interval)
+        df = df.tail(df.height - target_interval)  # remove null values
         df = df.drop('close')
 
         samples = []
         train_data[asset] = []
+        train_unix[asset] = []
         val_data[asset] = []
+        val_unix[asset] = []
         test_data[asset] = []
         for i in range(0, df.height - in_seq_len - target_len, target_len):
             x_start_unix = df.slice(i, 1).select('unix').to_numpy()[0][0]
@@ -95,10 +114,10 @@ def _save_batched_data():
                              ).permute(1, 0).squeeze()
 
             y = df.gather_every(
-                    target_interval, i + in_seq_len + out_seq_len
+                    target_interval, i + in_seq_len + target_len
                     ).head(out_seq_len)
             y = y.select('log_ret_y').to_numpy()
-            y = torch.tensor(y, dtype=torch.float32).squeeze()
+            y = torch.tensor(y, dtype=torch.float32).squeeze(1)
 
             if len(x) != in_seq_len or len(y) != out_seq_len:
                 continue
@@ -115,13 +134,24 @@ def _save_batched_data():
                       and x_start_unix >= train_end_unix):
                     val_data[asset].append((X, Y))
                 elif x_start_unix >= val_end_unix:
-                    test_data[asset].append((X, Y))
+                    test_data[asset].append(X)  # test data only has X
 
                 samples = []
+
+            y_start_unix = x_start_unix + in_seq_len * 60 * 1000
+            if y_end_unix < train_end_unix:
+                train_unix[asset].append(y_start_unix)
+            elif y_end_unix < val_end_unix and x_start_unix >= train_end_unix:
+                val_unix[asset].append(y_start_unix)
+
         print(f'{asset:<6}',
               f'train n_batch: {len(train_data[asset]):>3}     ',
               f'val n_batch: {len(val_data[asset]):>3}     ',
               f'test n_batch: {len(test_data[asset]):>3}')
+        torch.save(train_unix[asset][:len(train_data[asset])*batch_size],
+                   'data/train_unix.pt')
+        torch.save(val_unix[asset][:len(val_data[asset])*batch_size],
+                   'data/val_unix.pt')
     torch.save(train_data, 'data/train_data.pt')
     torch.save(val_data, 'data/val_data.pt')
     torch.save(test_data, 'data/test_data.pt')

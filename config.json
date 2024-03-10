@@ -1,15 +1,20 @@
 {
     "data": {
-        "batch_size": 8,
-        "in_seq_len": 43200,
-        "out_seq_len": 135,
-        "target_interval": 32,
-        "train_end_unix": 1672531200000,
-        "val_end_unix": 1685577600000
+        "preprocess": false,
+        "assets_for_preprocess": ["BTC"],
+        "batch_size": 32,
+        "in_seq_len": 4320,
+        "out_seq_len": 1,
+        "target_interval": 60,
+        "train_end_unix": 1640995200000,
+        "val_end_unix": 1672531200000
     },
     "train": {
-        "num_epochs": 100,
-        "learning_rate": 0.001,
-        "early_stopping_patience": 100
+        "num_epochs": 101,
+        "learning_rate": 0.1,
+        "saved_epoch": -1
+    },
+    "analysis": {
+        "timezone_offset": 8
     }
 }
