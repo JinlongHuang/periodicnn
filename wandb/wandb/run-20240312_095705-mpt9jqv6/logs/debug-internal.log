@@ -1,0 +1,216 @@
+2024-03-12 09:57:05,892 INFO    StreamThr :21608 [internal.py:wandb_internal():86] W&B internal server running at pid: 21608, started at: 2024-03-12 09:57:05.892316
+2024-03-12 09:57:05,894 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: status
+2024-03-12 09:57:05,895 INFO    WriterThread:21608 [datastore.py:open_for_write():87] open: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\run-mpt9jqv6.wandb
+2024-03-12 09:57:05,896 DEBUG   SenderThread:21608 [sender.py:send():378] send: header
+2024-03-12 09:57:05,896 DEBUG   SenderThread:21608 [sender.py:send():378] send: run
+2024-03-12 09:57:06,994 INFO    SenderThread:21608 [dir_watcher.py:__init__():211] watching files in: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files
+2024-03-12 09:57:06,995 INFO    SenderThread:21608 [sender.py:_start_run_threads():1099] run started: mpt9jqv6 with start time 1710208625.025897
+2024-03-12 09:57:07,005 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: check_version
+2024-03-12 09:57:07,005 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: check_version
+2024-03-12 09:57:07,500 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: run_start
+2024-03-12 09:57:07,503 DEBUG   HandlerThread:21608 [system_info.py:__init__():26] System info init
+2024-03-12 09:57:07,503 DEBUG   HandlerThread:21608 [system_info.py:__init__():41] System info init done
+2024-03-12 09:57:07,503 INFO    HandlerThread:21608 [system_monitor.py:start():194] Starting system monitor
+2024-03-12 09:57:07,503 INFO    SystemMonitor:21608 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-03-12 09:57:07,503 INFO    HandlerThread:21608 [system_monitor.py:probe():214] Collecting system info
+2024-03-12 09:57:07,508 INFO    SystemMonitor:21608 [interfaces.py:start():190] Started cpu monitoring
+2024-03-12 09:57:07,508 INFO    SystemMonitor:21608 [interfaces.py:start():190] Started disk monitoring
+2024-03-12 09:57:07,508 DEBUG   HandlerThread:21608 [system_info.py:probe():150] Probing system
+2024-03-12 09:57:07,509 INFO    SystemMonitor:21608 [interfaces.py:start():190] Started gpu monitoring
+2024-03-12 09:57:07,509 INFO    SystemMonitor:21608 [interfaces.py:start():190] Started memory monitoring
+2024-03-12 09:57:07,515 INFO    SystemMonitor:21608 [interfaces.py:start():190] Started network monitoring
+2024-03-12 09:57:07,516 DEBUG   HandlerThread:21608 [system_info.py:_probe_git():135] Probing git
+2024-03-12 09:57:07,577 DEBUG   HandlerThread:21608 [system_info.py:_probe_git():143] Probing git done
+2024-03-12 09:57:07,578 DEBUG   HandlerThread:21608 [system_info.py:probe():198] Probing system done
+2024-03-12 09:57:07,578 DEBUG   HandlerThread:21608 [system_monitor.py:probe():223] {'os': 'Windows-10-10.0.22621-SP0', 'python': '3.11.5', 'heartbeatAt': '2024-03-12T01:57:07.509481', 'startedAt': '2024-03-12T01:57:05.021076', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '<python with no main file>', 'codePathLocal': None, 'git': {'remote': None, 'commit': '3dc2a5f09bdc353b07da00c4242a75a45cd01c09'}, 'email': '12231295@mail.sustech.edu.cn', 'root': 'D:/Projects/TimeSeriesForecasting', 'host': 'LeonEe_Zero', 'username': 'Kaiming', 'executable': 'd:\\Tool\\Environments\\Anaconda\\python.exe', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 2500.0, 'min': 0.0, 'max': 2500.0}, 'cpu_freq_per_core': [{'current': 2500.0, 'min': 0.0, 'max': 2500.0}], 'disk': {'/': {'total': 396.93847274780273, 'used': 230.95578384399414}}, 'gpu': 'NVIDIA GeForce RTX 4060', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 4060', 'memory_total': 8585740288}], 'memory': {'total': 15.8431396484375}}
+2024-03-12 09:57:07,578 INFO    HandlerThread:21608 [system_monitor.py:probe():224] Finished collecting system info
+2024-03-12 09:57:07,578 INFO    HandlerThread:21608 [system_monitor.py:probe():227] Publishing system info
+2024-03-12 09:57:07,578 DEBUG   HandlerThread:21608 [system_info.py:_save_conda():207] Saving list of conda packages installed into the current environment
+2024-03-12 09:57:07,995 INFO    Thread-73 :21608 [dir_watcher.py:_on_file_created():271] file/dir created: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\conda-environment.yaml
+2024-03-12 09:57:18,001 INFO    Thread-73 :21608 [dir_watcher.py:_on_file_modified():288] file/dir modified: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\conda-environment.yaml
+2024-03-12 09:57:18,095 DEBUG   HandlerThread:21608 [system_info.py:_save_conda():219] Saving conda packages done
+2024-03-12 09:57:18,096 INFO    HandlerThread:21608 [system_monitor.py:probe():229] Finished publishing system info
+2024-03-12 09:57:18,096 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: status_report
+2024-03-12 09:57:18,096 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: keepalive
+2024-03-12 09:57:18,096 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: status_report
+2024-03-12 09:57:18,096 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: keepalive
+2024-03-12 09:57:18,097 DEBUG   SenderThread:21608 [sender.py:send():378] send: files
+2024-03-12 09:57:18,097 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-metadata.json with policy now
+2024-03-12 09:57:18,369 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: python_packages
+2024-03-12 09:57:18,369 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: python_packages
+2024-03-12 09:57:18,370 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-12 09:57:18,370 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-12 09:57:18,371 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: stop_status
+2024-03-12 09:57:18,371 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,372 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,373 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,373 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,374 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,374 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,374 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:18,375 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-12 09:57:19,002 INFO    Thread-73 :21608 [dir_watcher.py:_on_file_created():271] file/dir created: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\requirements.txt
+2024-03-12 09:57:19,002 INFO    Thread-73 :21608 [dir_watcher.py:_on_file_created():271] file/dir created: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\wandb-metadata.json
+2024-03-12 09:57:19,169 DEBUG   SenderThread:21608 [sender.py:send():378] send: telemetry
+2024-03-12 09:57:19,169 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,169 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,171 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,171 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,171 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,171 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,172 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,172 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,172 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,172 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,173 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,173 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,173 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,173 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,173 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,173 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,173 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,174 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,174 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,174 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,174 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,174 DEBUG   SenderThread:21608 [sender.py:send():378] send: history
+2024-03-12 09:57:19,174 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: summary_record
+2024-03-12 09:57:19,174 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,175 DEBUG   SenderThread:21608 [sender.py:send():378] send: telemetry
+2024-03-12 09:57:19,175 DEBUG   SenderThread:21608 [sender.py:send():378] send: exit
+2024-03-12 09:57:19,175 INFO    SenderThread:21608 [sender.py:send_exit():585] handling exit code: 0
+2024-03-12 09:57:19,175 INFO    SenderThread:21608 [sender.py:send_exit():587] handling runtime: 10
+2024-03-12 09:57:19,175 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,175 INFO    SenderThread:21608 [sender.py:send_exit():593] send defer
+2024-03-12 09:57:19,175 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,175 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 0
+2024-03-12 09:57:19,176 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,176 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 0
+2024-03-12 09:57:19,176 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 1
+2024-03-12 09:57:19,176 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,176 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 1
+2024-03-12 09:57:19,176 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,176 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 1
+2024-03-12 09:57:19,176 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 2
+2024-03-12 09:57:19,176 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,176 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 2
+2024-03-12 09:57:19,176 INFO    HandlerThread:21608 [system_monitor.py:finish():203] Stopping system monitor
+2024-03-12 09:57:19,176 DEBUG   SystemMonitor:21608 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-03-12 09:57:19,186 INFO    HandlerThread:21608 [interfaces.py:finish():202] Joined cpu monitor
+2024-03-12 09:57:19,186 DEBUG   SystemMonitor:21608 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-03-12 09:57:19,187 INFO    HandlerThread:21608 [interfaces.py:finish():202] Joined disk monitor
+2024-03-12 09:57:19,187 DEBUG   SystemMonitor:21608 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-03-12 09:57:19,241 INFO    HandlerThread:21608 [interfaces.py:finish():202] Joined gpu monitor
+2024-03-12 09:57:19,241 INFO    HandlerThread:21608 [interfaces.py:finish():202] Joined memory monitor
+2024-03-12 09:57:19,241 INFO    HandlerThread:21608 [interfaces.py:finish():202] Joined network monitor
+2024-03-12 09:57:19,242 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,242 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 2
+2024-03-12 09:57:19,242 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 3
+2024-03-12 09:57:19,242 DEBUG   SenderThread:21608 [sender.py:send():378] send: stats
+2024-03-12 09:57:19,242 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,242 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 3
+2024-03-12 09:57:19,242 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,242 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 3
+2024-03-12 09:57:19,243 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 4
+2024-03-12 09:57:19,243 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,243 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 4
+2024-03-12 09:57:19,243 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,243 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 4
+2024-03-12 09:57:19,243 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 5
+2024-03-12 09:57:19,243 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,243 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 5
+2024-03-12 09:57:19,243 DEBUG   SenderThread:21608 [sender.py:send():378] send: summary
+2024-03-12 09:57:19,244 INFO    SenderThread:21608 [sender.py:_save_file():1365] saving file wandb-summary.json with policy end
+2024-03-12 09:57:19,244 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,244 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 5
+2024-03-12 09:57:19,244 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 6
+2024-03-12 09:57:19,244 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,244 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 6
+2024-03-12 09:57:19,244 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,244 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 6
+2024-03-12 09:57:19,247 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: status_report
+2024-03-12 09:57:19,372 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-12 09:57:19,692 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 7
+2024-03-12 09:57:19,692 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: poll_exit
+2024-03-12 09:57:19,692 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,693 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 7
+2024-03-12 09:57:19,693 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,693 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 7
+2024-03-12 09:57:19,693 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 8
+2024-03-12 09:57:19,693 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,693 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 8
+2024-03-12 09:57:19,693 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,693 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 8
+2024-03-12 09:57:19,693 INFO    SenderThread:21608 [job_builder.py:build():298] Attempting to build job artifact
+2024-03-12 09:57:19,693 INFO    SenderThread:21608 [job_builder.py:_get_source_type():439] no source found
+2024-03-12 09:57:19,693 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 9
+2024-03-12 09:57:19,694 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:19,694 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 9
+2024-03-12 09:57:19,694 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:19,694 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 9
+2024-03-12 09:57:19,694 INFO    SenderThread:21608 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-03-12 09:57:19,759 INFO    wandb-upload_0:21608 [upload_job.py:push():131] Uploaded file C:\Users\Kaiming\AppData\Local\Temp\tmp3oanyp1bwandb\una21zcz-wandb-metadata.json
+2024-03-12 09:57:20,002 INFO    Thread-73 :21608 [dir_watcher.py:_on_file_modified():288] file/dir modified: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\config.yaml
+2024-03-12 09:57:20,003 INFO    SenderThread:21608 [dir_watcher.py:_on_file_created():271] file/dir created: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\wandb-summary.json
+2024-03-12 09:57:20,003 INFO    SenderThread:21608 [dir_watcher.py:finish():388] scan: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files
+2024-03-12 09:57:20,003 INFO    SenderThread:21608 [dir_watcher.py:finish():402] scan save: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\conda-environment.yaml conda-environment.yaml
+2024-03-12 09:57:20,003 INFO    SenderThread:21608 [dir_watcher.py:finish():402] scan save: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\config.yaml config.yaml
+2024-03-12 09:57:20,005 INFO    SenderThread:21608 [dir_watcher.py:finish():402] scan save: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\requirements.txt requirements.txt
+2024-03-12 09:57:20,006 INFO    SenderThread:21608 [dir_watcher.py:finish():402] scan save: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\wandb-metadata.json wandb-metadata.json
+2024-03-12 09:57:20,007 INFO    SenderThread:21608 [dir_watcher.py:finish():402] scan save: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\wandb-summary.json wandb-summary.json
+2024-03-12 09:57:20,008 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 10
+2024-03-12 09:57:20,010 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:20,010 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 10
+2024-03-12 09:57:20,012 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:20,012 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 10
+2024-03-12 09:57:20,013 INFO    SenderThread:21608 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-12 09:57:20,373 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-12 09:57:20,373 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: poll_exit
+2024-03-12 09:57:21,108 INFO    wandb-upload_0:21608 [upload_job.py:push():131] Uploaded file d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\conda-environment.yaml
+2024-03-12 09:57:21,375 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-12 09:57:21,375 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: poll_exit
+2024-03-12 09:57:21,698 INFO    wandb-upload_2:21608 [upload_job.py:push():131] Uploaded file d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\requirements.txt
+2024-03-12 09:57:21,916 INFO    wandb-upload_3:21608 [upload_job.py:push():131] Uploaded file d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\wandb-summary.json
+2024-03-12 09:57:22,377 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-12 09:57:22,377 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: poll_exit
+2024-03-12 09:57:22,575 INFO    wandb-upload_1:21608 [upload_job.py:push():131] Uploaded file d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\files\config.yaml
+2024-03-12 09:57:22,776 INFO    Thread-72 (_thread_body):21608 [sender.py:transition_state():613] send defer: 11
+2024-03-12 09:57:22,776 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:22,776 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 11
+2024-03-12 09:57:22,776 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:22,776 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 11
+2024-03-12 09:57:22,776 INFO    SenderThread:21608 [file_pusher.py:join():178] waiting for file pusher
+2024-03-12 09:57:22,777 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 12
+2024-03-12 09:57:22,777 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:22,777 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 12
+2024-03-12 09:57:22,777 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:22,777 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 12
+2024-03-12 09:57:22,777 INFO    SenderThread:21608 [file_stream.py:finish():595] file stream finish called
+2024-03-12 09:57:23,255 INFO    SenderThread:21608 [file_stream.py:finish():599] file stream finish is done
+2024-03-12 09:57:23,255 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 13
+2024-03-12 09:57:23,255 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:23,255 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 13
+2024-03-12 09:57:23,255 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:23,255 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 13
+2024-03-12 09:57:23,255 INFO    SenderThread:21608 [sender.py:transition_state():613] send defer: 14
+2024-03-12 09:57:23,256 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: defer
+2024-03-12 09:57:23,256 DEBUG   SenderThread:21608 [sender.py:send():378] send: final
+2024-03-12 09:57:23,256 INFO    HandlerThread:21608 [handler.py:handle_request_defer():172] handle defer: 14
+2024-03-12 09:57:23,256 DEBUG   SenderThread:21608 [sender.py:send():378] send: footer
+2024-03-12 09:57:23,256 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: defer
+2024-03-12 09:57:23,256 INFO    SenderThread:21608 [sender.py:send_request_defer():609] handle sender defer: 14
+2024-03-12 09:57:23,257 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-12 09:57:23,257 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: poll_exit
+2024-03-12 09:57:23,258 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-12 09:57:23,258 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: server_info
+2024-03-12 09:57:23,258 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: get_summary
+2024-03-12 09:57:23,259 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: sampled_history
+2024-03-12 09:57:23,259 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: server_info
+2024-03-12 09:57:23,259 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: job_info
+2024-03-12 09:57:23,762 DEBUG   SenderThread:21608 [sender.py:send_request():405] send_request: job_info
+2024-03-12 09:57:23,763 DEBUG   HandlerThread:21608 [handler.py:handle_request():146] handle_request: shutdown
+2024-03-12 09:57:23,763 INFO    HandlerThread:21608 [handler.py:finish():869] shutting down handler
+2024-03-12 09:57:24,262 INFO    WriterThread:21608 [datastore.py:close():296] close: d:\Projects\TimeSeriesForecasting\wandb\wandb\run-20240312_095705-mpt9jqv6\run-mpt9jqv6.wandb
+2024-03-12 09:57:24,762 INFO    SenderThread:21608 [sender.py:finish():1521] shutting down sender
+2024-03-12 09:57:24,762 INFO    SenderThread:21608 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-12 09:57:24,762 INFO    SenderThread:21608 [file_pusher.py:join():178] waiting for file pusher
