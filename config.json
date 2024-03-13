@@ -1,7 +1,9 @@
 {
     "data": {
         "preprocess": false,
-        "assets_for_preprocess": ["BTC"],
+        "assets_for_preprocess": [
+            "ETH"
+        ],
         "batch_size": 32,
         "in_seq_len": 4320,
         "out_seq_len": 1,
@@ -11,7 +13,7 @@
     },
     "train": {
         "num_epochs": 101,
-        "learning_rate": 0.1,
+        "learning_rate": 0.2,
         "saved_epoch": -1
     },
     "analysis": {

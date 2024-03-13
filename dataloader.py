@@ -58,7 +58,7 @@ def _save_batched_data():
         target_len = out_seq_len * target_interval
         train_end_unix = config['data']['train_end_unix']
         val_end_unix = config['data']['val_end_unix']
-        assets = config['data']['assets_for_preprocess']
+        assets_for_preprocess = config['data']['assets_for_preprocess']
 
     train_data = dict()
     train_unix = dict()
@@ -67,9 +67,7 @@ def _save_batched_data():
     test_data = dict()
     for entry in os.scandir('data/'):
         asset = entry.name[:-4]
-        if not entry.is_dir():
-            continue
-        if (assets != ['all'] and (asset not in assets)):
+        if not entry.is_dir() or (asset not in assets_for_preprocess):
             continue
         raw_file = f'{entry.path}/raw.parquet'
 
@@ -94,6 +92,8 @@ def _save_batched_data():
         val_data[asset] = []
         val_unix[asset] = []
         test_data[asset] = []
+        # Note: i loops through index instead of unix
+        # Due to the possibility of missing data, unix time diff >= 1 minute
         for i in range(0, df.height - in_seq_len - target_len, target_len):
             x_start_unix = df.slice(i, 1).select('unix').to_numpy()[0][0]
             y_end_unix = x_start_unix + (
@@ -134,7 +134,7 @@ def _save_batched_data():
                       and x_start_unix >= train_end_unix):
                     val_data[asset].append((X, Y))
                 elif x_start_unix >= val_end_unix:
-                    test_data[asset].append(X)  # test data only has X
+                    test_data[asset].append((X, Y))
 
                 samples = []
 

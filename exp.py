@@ -33,21 +33,21 @@ def train(model, data, device, optimizer):
 
 def validate(model, data, device):
     model.eval()
-    loss = []
+    pnl = []
     preds = []
     targets = []
     with torch.no_grad():
         for x, y in data:
             x, y = x.to(device), y.to(device)
             pred = model(x)
-            loss.append(_val_loss(pred, y))
+            pnl.append(_val_pnl(pred, y))
             preds.append(list(pred.cpu().squeeze().numpy()))
             targets.append(list(y.cpu().squeeze().numpy()))
-    loss = list(chain.from_iterable(loss))
+    pnl = list(chain.from_iterable(pnl))
     preds = list(chain.from_iterable(preds))
     targets = list(chain.from_iterable(targets))
 
-    return loss, preds, targets
+    return pnl, preds, targets
 
 
 def test(model, data, device):
@@ -68,11 +68,11 @@ def _neg_pnl_loss(pred, y):
     return -torch.mean(torch.sum(pred * y, dim=1))
 
 
-def _val_loss(pred, y):
+def _val_pnl(pred, y):
     """pred, y: (batch_size, out_seq_len)"""
     if pred.shape != y.shape:
         raise ValueError("pred and y must have the same shape")
-    return list(-torch.sum(pred * y, dim=1).numpy())
+    return list(torch.sum(pred * y, dim=1).numpy())
 
 
 def run():
@@ -119,14 +119,14 @@ def run():
                 continue
 
             train_loss = train(model, train_data[asset], device, optimizer)
-            val_loss, val_preds, val_targets = validate(
+            val_pnl, val_preds, val_targets = validate(
                     model, val_data[asset], device)
-            sum_val_ret = - sum(val_loss)
+            total_val_pnl = sum(val_pnl)
 
             print(f"Epoch {epoch:>5},      "
                   f"Asset: {asset:>6},     "
                   f"Train Loss: {train_loss:>10.5f},  "
-                  f"Total Val PnL: {sum_val_ret:>10.5f}")
+                  f"Total Val PnL: {total_val_pnl:>10.5f}")
 
         # Save checkpoint
         if epoch % 10 == 0:
@@ -135,7 +135,7 @@ def run():
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'train_loss': train_loss,
-                'val_loss': val_loss,
+                'val_pnl': val_pnl,
                 'val_preds': val_preds,
                 'val_targets': val_targets
             }
