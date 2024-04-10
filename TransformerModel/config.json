@@ -1,0 +1,22 @@
+{
+    "data": {
+        "preprocess": false,
+        "assets_for_preprocess": [
+            "ETH"
+        ],
+        "batch_size": 32,
+        "in_seq_len": 1440,
+        "out_seq_len": 1,
+        "target_interval": 60,
+        "train_end_unix": 1640995200000,
+        "val_end_unix": 1672531200000
+    },
+    "train": {
+        "num_epochs": 45,
+        "learning_rate": 0.2,
+        "saved_epoch": -1
+    },
+    "analysis": {
+        "timezone_offset": 8
+    }
+}
