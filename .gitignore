@@ -1,5 +1,7 @@
 venv_tsf/
+wandb/
 data/
 LTSF-Linear/
+*.env
 .DS_Store
 __pycache__

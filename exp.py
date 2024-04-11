@@ -1,4 +1,5 @@
 import os
+import wandb
 import json
 from time import time
 from itertools import chain
@@ -6,19 +7,19 @@ from itertools import chain
 import torch
 import torch.optim as optim
 
-from models import OneLinear
+from models import OneLinear, BinarizedLinear
 from dataloader import load_data
 
 
 def train(model, data, device, optimizer):
     model.train()
     total_loss = 0
-    for x, y in data:
-        x, y = x.to(device), y.to(device)
+    for X, Y in data:
+        X, Y = X.to(device), Y.to(device)
 
         # Forward pass
-        pred = model(x)
-        loss = _neg_pnl_loss(pred, y)
+        pred = model(X)
+        loss = _neg_pnl_loss(pred, Y)
 
         # Backward pass and optimize
         optimizer.zero_grad()
@@ -37,12 +38,12 @@ def validate(model, data, device):
     preds = []
     targets = []
     with torch.no_grad():
-        for x, y in data:
-            x, y = x.to(device), y.to(device)
-            pred = model(x)
-            pnl.append(_val_pnl(pred, y))
+        for X, Y in data:
+            X, Y = X.to(device), Y.to(device)
+            pred = model(X)
+            pnl.append(_val_pnl(pred, Y))
             preds.append(list(pred.cpu().squeeze().numpy()))
-            targets.append(list(y.cpu().squeeze().numpy()))
+            targets.append(list(Y.cpu().squeeze().numpy()))
     pnl = list(chain.from_iterable(pnl))
     preds = list(chain.from_iterable(preds))
     targets = list(chain.from_iterable(targets))
@@ -54,9 +55,9 @@ def test(model, data, device):
     model.eval()
     predictions = []
     with torch.no_grad():
-        for x, y in data:
-            x, y = x.to(device), y.to(device)
-            pred = model(x)
+        for X, Y in data:
+            X, Y = X.to(device), Y.to(device)
+            pred = model(X)
             predictions.append(pred.cpu())
     return predictions
 
@@ -75,40 +76,47 @@ def _val_pnl(pred, y):
     return list(torch.sum(pred * y, dim=1).numpy())
 
 
-def run():
+def run(i: int, use_wandb: bool):
+    if use_wandb:
+        wandb.init(project='BNN', entity='edgesky',
+                   name=f'real-data-seed-{i}', reinit=True)
+
     with open("config.json") as f:
         config = json.load(f)
-        in_seq_len = config['data']['in_seq_len']
-        out_seq_len = config['data']['out_seq_len']
-        assets = config['data']['assets_for_preprocess']
+        in_seq_len = config["data"]["in_seq_len"]
+        out_seq_len = config["data"]["out_seq_len"]
+        assets = config["data"]["assets_for_preprocess"]
 
-        num_epochs = config['train']['num_epochs']
-        learning_rate = config['train']['learning_rate']
-        saved_epoch = config['train']['saved_epoch']
+        num_epochs = config["train"]["num_epochs"]
+        learning_rate = config["train"]["learning_rate"]
+        saved_epoch = config["train"]["saved_epoch"]
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = OneLinear(in_seq_len, out_seq_len).to(device)
+    model = BinarizedLinear(in_seq_len, out_seq_len).to(device)
+    # model = Naive().to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     starting_epoch = 0
 
     # Load saved checkpoints into model and optimizer
     if saved_epoch >= 0:
-        checkpoint_file = f'checkpoints/OneLinear_epoch_{saved_epoch}.pt'
+        checkpoint_file = f"checkpoints/OneLinear_epoch_{saved_epoch}.pt"
         if os.path.exists(checkpoint_file):
             checkpoint = torch.load(checkpoint_file)
-            model.load_state_dict(checkpoint['model_state_dict'])
-            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-            starting_epoch = checkpoint['epoch'] + 1
-            sum_val_ret = - sum(checkpoint['val_loss'])
-            print(f"Epoch {checkpoint['epoch']:>5}, "
-                  f"Train Loss: {checkpoint['train_loss']:>10.5f},  "
-                  f"Total Val PnL: {sum_val_ret:>10.5f}")
+            model.load_state_dict(checkpoint["model_state_dict"])
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            starting_epoch = checkpoint["epoch"] + 1
+            sum_val_ret = -sum(checkpoint["val_loss"])
+            print(
+                f"Epoch {checkpoint['epoch']:>5}, "
+                f"Train Loss: {checkpoint['train_loss']:>10.5f},  "
+                f"Total Val PnL: {sum_val_ret:>10.5f}"
+            )
 
     train_data, val_data, test_data = load_data()
 
     train_start_time = time()
     for epoch in range(starting_epoch, num_epochs):
-        for entry in os.scandir('data/'):
+        for entry in os.scandir("data/"):
             # Select assets to train
             if not entry.is_dir():
                 continue
@@ -123,22 +131,30 @@ def run():
                     model, val_data[asset], device)
             total_val_pnl = sum(val_pnl)
 
-            print(f"Epoch {epoch:>5},      "
-                  f"Asset: {asset:>6},     "
-                  f"Train Loss: {train_loss:>10.5f},  "
-                  f"Total Val PnL: {total_val_pnl:>10.5f}")
-
-        # Save checkpoint
+        # Log metrics and save checkpoint
         if epoch % 10 == 0:
-            checkpoint = {
-                'epoch': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'train_loss': train_loss,
-                'val_pnl': val_pnl,
-                'val_preds': val_preds,
-                'val_targets': val_targets
-            }
-            torch.save(checkpoint, f"checkpoints/OneLinear_epoch_{epoch}.pt")
+            print(
+                f"Epoch {epoch:>5},      "
+                f"Train Loss: {train_loss:>10.5f},  "
+                f"Total Val PnL: {total_val_pnl:>10.5f}"
+            )
+            if use_wandb:
+                wandb.log({
+                           'Train Loss': train_loss,
+                           'Total Val PnL': total_val_pnl
+                           })
 
+            checkpoint = {
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "train_loss": train_loss,
+                "val_pnl": val_pnl,
+                "val_preds": val_preds,
+                "val_targets": val_targets,
+            }
+            torch.save(checkpoint, f"checkpoints/epoch_{epoch}.pt")
+
+    if use_wandb:
+        wandb.finish()
     print(f"Training finished in {time() - train_start_time:.2f} seconds")

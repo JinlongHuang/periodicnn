@@ -3,12 +3,44 @@ import json
 from datetime import datetime, timezone, timedelta
 
 import numpy as np
+import pandas as pd
 import torch
 import plotly.graph_objects as go
 
 
 PLOT_INTERVAL = 1  # hours
 SAVED_EPOCH = 50
+
+
+def plot():
+    for saved_epoc in range(0, 301, 50):
+        checkpoint_file = f'checkpoints/OneLinear_epoch_{saved_epoc}.pt'
+        if os.path.exists(checkpoint_file):
+            checkpoint = torch.load(checkpoint_file)
+            model_state_dict = checkpoint['model_state_dict']
+            weight_df = pd.DataFrame(
+                    model_state_dict['linear.weight'].squeeze().numpy())
+
+            fig = go.Figure([go.Bar(x=weight_df.index, y=weight_df[0])
+                             ])
+
+            grid_color = "#151515"
+            fig.update_layout(
+                    paper_bgcolor='black',
+                    plot_bgcolor='black',
+                    margin=dict(t=0, l=0, b=0, r=0),
+                    autosize=True,
+                    font=dict(family="Courier New, monospace",
+                              size=25, color="grey"),
+                    barmode='relative',
+                    # height=3000,
+                    )
+            fig.update_yaxes(showgrid=True, gridwidth=1,
+                             gridcolor=grid_color, linecolor=grid_color,
+                             # zeroline=False
+                             )
+
+            fig.show()
 
 
 def plot_pnl_heatmap():
@@ -145,4 +177,5 @@ def _local_time_to_unix(local_time: datetime) -> int:
 
 
 if __name__ == '__main__':
-    plot_pnl_heatmap()
+    # plot_pnl_heatmap()
+    plot()
