@@ -50,7 +50,7 @@ def load_data() -> tuple[dict[list[tuple[torch.Tensor, torch.Tensor]]]]:
         with open('config.json', 'w') as f:
             json.dump(config, f, indent=4)
         return load_data()
-
+###
 def _save_batched_data():
     with open('config.json', 'r') as f:
         config = json.load(f)
