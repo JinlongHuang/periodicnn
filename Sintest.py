@@ -1,14 +1,20 @@
 import numpy as np
 import torch
 import torch.nn as nn
+import matplotlib.pyplot as plt
 
 class SimpleLinearModel(nn.Module):
-    def __init__(self):
+    def __init__(self, seed=None):
         super(SimpleLinearModel, self).__init__()
+        if seed is not None:
+            torch.manual_seed(seed)
+        else: 
+            torch.manual_seed(6) 
         self.linear = nn.Linear(1, 2, bias=False)
         with torch.no_grad():
-            self.linear.weight.copy_(torch.tensor([[3
-                                                    ], [4]]))
+            # randomize the initial omega
+            self.linear.weight.copy_(torch.randn(2, 1))
+            #self.linear.weight.copy_(torch.tensor([[3], [4]]))
 
     def forward(self, x):
         return self.linear(x)
@@ -68,43 +74,80 @@ def check_local_minimum(eigenvalues):
     else:
         print("This is not a local minimum.")
 
-     
+def train_model(seed, inputs, targets, num_epochs=100, lr= 0.05, print_every=10):
+    # Initialize the model and optimizer with the given seed
+    model = SimpleLinearModel(seed=seed)
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 
-# Initialize the model and optimizer
-model = SimpleLinearModel()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+    # Dictionary to store the loss history
+    loss_history = []
+
+
+    for epoch in range(num_epochs):
+        # Zero the gradients
+        optimizer.zero_grad()
+
+        # Forward pass
+        outputs = model(inputs)
+
+        # Compute loss
+        loss = custom_loss(outputs, targets)
+
+        # Backward pass
+        loss.backward()
+
+        # Update parameters
+        optimizer.step()
+
+        # Record the loss
+        loss_history.append(loss.item())
+
+        # Print every 'print_every' epochs
+        if (epoch + 1) % print_every == 0:
+            print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}, Weights: {model.linear.weight.data.numpy()}")
+
+        if epoch + 1 == num_epochs:
+            hessian_matrix_central, eigenvalues_central = compute_hessian_and_eigenvalues(model, inputs, targets)
+            print(eigenvalues_central)
+            check_local_minimum(eigenvalues_central)
+        
+
+    return loss_history, model.linear.weight.data.numpy()
+
 
 # Data for training
 inputs = torch.tensor([[np.pi/4], [np.pi/2],[3*np.pi/4],[np.pi]], dtype=torch.float32)
 
 targets = torch.tensor([[2.23], [0.71],[0.16],[1.0]], dtype=torch.float32)
 
-# Number of epochs to train
-num_epochs = 1000
+loss_histories = {}
+weights = {}
 
-# Training loop
-for epoch in range(num_epochs):
-    # Zero the gradients before running the backward pass.
-    optimizer.zero_grad()
+# Train the model for different seeds
+for i in range(20,40):  # Adjust the range for more seeds
+    print(f"Training with seed {i}")
+    loss_history, weight = train_model(seed=i, inputs=inputs, targets=targets, num_epochs=300, lr=0.05, print_every=10)
+    loss_histories[i] = loss_history
+    weights[i] = weight
 
-    # Forward pass: Compute predicted y by passing x to the model
-    outputs = model(inputs)
+# Example of how to access and print the loss history for a specific seed
+#print(len(loss_histories[5]))  # Length of loss history for seed 5
+#print(loss_histories[5])  # Loss history for seed 5
 
-    # Compute loss
-    loss = custom_loss(outputs, targets)
+plt.figure(figsize=(10, 5))
+for seed, history in loss_histories.items():
+    plt.plot(history, label=f'Seed {seed}')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Loss History by Seed')
 
-    # Backward pass: Compute gradient of the loss with respect to model parameters
-    loss.backward()
+# Place the legend on the left side outside of the plot
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize='small')
 
-    # Calling the step function on an Optimizer makes an update to its parameters
-    optimizer.step()
+plt.show()
 
-    # Log weights
-    print(f"Epoch {epoch+1}/{num_epochs}, Weights: {model.linear.weight.data.numpy()}")
 
-# This setup will print the weight matrices after each epoch, showing how they are updated.
+#hessian_matrix_central, eigenvalues_central = compute_hessian_and_eigenvalues(model, inputs, targets)
 
-hessian_matrix_central, eigenvalues_central = compute_hessian_and_eigenvalues(model, inputs, targets)
-
-print(eigenvalues_central)
-check_local_minimum(eigenvalues_central)
+#print(eigenvalues_central)
+#check_local_minimum(eigenvalues_central)
