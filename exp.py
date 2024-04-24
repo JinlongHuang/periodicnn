@@ -153,7 +153,7 @@ def run(i: int, use_wandb: bool):
                 "val_preds": val_preds,
                 "val_targets": val_targets,
             }
-            torch.save(checkpoint, f"checkpoints/epoch_{epoch}.pt")
+            torch.save(checkpoint, f"checkpoints/_epoch_{epoch}.pt")
 
     if use_wandb:
         wandb.finish()
