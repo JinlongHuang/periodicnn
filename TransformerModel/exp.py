@@ -83,14 +83,14 @@ def run():
         in_seq_len = config['data']['in_seq_len']
         out_seq_len = config['data']['out_seq_len']
         batch_size = config['data']['batch_size']
-        assets = config['data']['assets_for_preprocess']
+        assets = config['data']['ts_for_preprocess']
 
         num_epochs = config['train']['num_epochs']
         learning_rate = config['train']['learning_rate']
         saved_epoch = config['train']['saved_epoch']
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = TransformerModel(in_seq_len, out_seq_len,batch_size).to(device)
+    model = TransformerModel(in_seq_len, out_seq_len, batch_size).to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     starting_epoch = 0
     print(in_seq_len)

@@ -2,21 +2,28 @@
     "data": {
         "preprocess": false,
         "binarize": false,
-        "assets_for_preprocess": [
-            "ETH"
+        "dataset_category": "monash",
+        "ts_for_preprocess": [
+            "traffic_hourly"
         ],
-        "batch_size": 32,
-        "in_seq_len": 4320,
-        "out_seq_len": 1,
+        "batch_size": 8,
+        "in_seq_len": 168,
+        "out_seq_len": 168,
         "in_interval": 1,
-        "out_interval": 60,
-        "train_end_unix": 1640995200000,
-        "val_end_unix": 1672531200000
+        "out_interval": 1,
+        "step_size": 24,
+        "crypto_train_end_unix": 1640995200000,
+        "crypto_val_end_unix": 1672531200000,
+        "monash_zero_shot_percentage": 0.2,
+        "monash_train_percentage": 0.8,
+        "monash_val_percentage": 0.1
     },
     "train": {
-        "num_epochs": 101,
-        "torch_seed": 9,
-        "learning_rate": 0.02,
+        "model_name": "AdaFunc",
+        "num_epochs": 3,
+        "torch_seed": 0,
+        "loss_func": "mse",
+        "learning_rate": 0.05,
         "saved_epoch": -1
     },
     "analysis": {

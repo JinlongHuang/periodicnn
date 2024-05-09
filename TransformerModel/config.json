@@ -1,7 +1,7 @@
 {
     "data": {
         "preprocess": false,
-        "assets_for_preprocess": [
+        "ts_for_preprocess": [
             "ETH"
         ],
         "batch_size": 32,

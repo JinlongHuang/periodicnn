@@ -1,18 +1,22 @@
 import os
 import json
+from icecream import ic
 from datetime import datetime, timezone, timedelta
 
 import numpy as np
 import pandas as pd
+import polars as pl
 import torch
 import plotly.graph_objects as go
+
+from dataloader import load_data
 
 
 PLOT_INTERVAL = 1  # hours
 SAVED_EPOCH = 50
 
 
-def plot():
+def plot_bar():
     for saved_epoc in range(0, 301, 50):
         checkpoint_file = f'checkpoints/OneLinear_epoch_{saved_epoc}.pt'
         if os.path.exists(checkpoint_file):
@@ -41,6 +45,88 @@ def plot():
                              )
 
             fig.show()
+
+
+def plot_weight_heatmap(checkpoint_file, params_name):
+    """
+    Plot the weight matrix as a Heatmap
+
+    Args:
+        checkpoint_file: str
+            The file path of the checkpoint file
+        params_name: str
+            The name of the parameter to plot
+
+    Example:
+    plot_weight_heatmap('checkpoints/OneLinear_epoch_0.pt', 'linear.weight')
+    """
+    if not os.path.exists(checkpoint_file):
+        raise FileNotFoundError(f'{checkpoint_file} not found')
+
+    checkpoint = torch.load(checkpoint_file)
+    model_state_dict = checkpoint['model_state_dict']
+    params_df = pl.DataFrame(
+            model_state_dict[params_name].squeeze().numpy())
+
+    n_rows = params_df.shape[0]
+    n_cols = params_df.shape[1]
+    x_labels = np.arange(n_cols)
+    y_labels = np.arange(n_rows)
+    z = params_df.to_numpy()
+
+    fig = go.Figure(
+            data=go.Heatmap(
+                z=z,
+                x=x_labels,
+                y=y_labels,
+                colorscale='Viridis',
+                colorbar=dict(title='Weight'),
+                )
+        )
+    fig.show()
+
+
+def plot_val_line(checkpoint_file: str):
+    ts_name = 'traffic_hourly'
+    ts_index = -1
+    batch_index = 1
+    sample_index = 3
+
+    # get input and target
+    _, val_data, _, _ = load_data()
+    X, Y = val_data[ts_name][ts_index][batch_index]
+    input = X[sample_index].squeeze().numpy()
+    target = Y[sample_index].squeeze().numpy()
+
+    # get pred
+    if not os.path.exists(checkpoint_file):
+        raise FileNotFoundError(f'{checkpoint_file} not found')
+    checkpoint = torch.load(checkpoint_file)
+    val_preds = checkpoint['val_preds']
+    pred = val_preds[batch_index][sample_index]
+
+    # define x labels
+    in_seq_len = input.shape[0]
+    out_seq_len = target.shape[0]
+    input_labels = np.arange(in_seq_len)
+    target_labels = np.arange(in_seq_len, in_seq_len + out_seq_len)
+
+    # plot
+    fig = go.Figure()
+    blue = '#2d86ba'
+    green = '#2bc459'
+    fig.add_trace(go.Scatter(x=input_labels, y=input, mode='lines',
+                             line={'color': blue},
+                             name='input'))
+    fig.add_trace(go.Scatter(x=target_labels, y=target, mode='lines',
+                             line={'color': blue,
+                                   'dash': 'dash'},
+                             name='target'))
+    fig.add_trace(go.Scatter(x=target_labels, y=pred, mode='lines',
+                             line={'color': green},
+                             name='pred'))
+
+    fig.show()
 
 
 def plot_pnl_heatmap():
@@ -100,12 +186,12 @@ def _prepare_pnl_as_matrix() -> np.ndarray:
 
 
 def _pad_zeros_to_plot(plotted_data: list) -> np.ndarray:
-    val_unix_file = 'data/val_unix.pt'
+    val_unix_file = 'data/crypto/val_unix.pt'
     if os.path.exists(val_unix_file):
         val_unix = torch.load(val_unix_file)
     with open('config.json', 'r') as f:
         config = json.load(f)
-        start_unix = config['data']['train_end_unix']
+        start_unix = config['data']['crypto_train_end_unix']
         timezone_offset = config['analysis']['timezone_offset']
 
     val_start_date = _unix_to_local_time(val_unix[0], timezone_offset)
@@ -137,8 +223,8 @@ def _get_y_labels() -> list[str]:
     """
     with open('config.json', 'r') as f:
         config = json.load(f)
-        start_unix = config['data']['train_end_unix']
-        end_unix = config['data']['val_end_unix']
+        start_unix = config['data']['crypto_train_end_unix']
+        end_unix = config['data']['crypto_val_end_unix']
         timezone_offset = config['analysis']['timezone_offset']
     start_date = _unix_to_local_time(start_unix, timezone_offset)
     first_monday = _previous_monday(start_date)
@@ -178,4 +264,5 @@ def _local_time_to_unix(local_time: datetime) -> int:
 
 if __name__ == '__main__':
     # plot_pnl_heatmap()
-    plot()
+    # plot_weight_heatmap('checkpoints/AdaFunc_epoch_0.pt', 'linear.weight')
+    plot_val_line('checkpoints/AdaFunc_epoch_0.pt')

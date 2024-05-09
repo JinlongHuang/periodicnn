@@ -122,3 +122,41 @@ class Naive(nn.Module):
         assert x.shape[1] >= 60, "in_seq_len must be at least 60"
         ma = x[:, -60:].mean(dim=1, keepdim=True)
         return self.hardtanh(self.linear(ma)) * 10000
+
+
+class AdaFunc(nn.Module):
+    """
+    Adaptive Function Model
+
+    Using x to adjust parameters in the function y(t).
+    y(t) could have sine, cosine, linear, polynomial, exponential, etc.
+    """
+
+    def __init__(self, in_seq_len, out_seq_len):
+        super().__init__()
+        self.n_sin = self.n_cos = 3
+        self.n_params = 2 * self.n_sin + 2 * self.n_cos + 1
+        self.linear = nn.Linear(in_seq_len, self.n_params, bias=False)
+        self.future_t = torch.arange(0, out_seq_len, dtype=torch.float32)
+
+    def forward(self, x):
+        """
+        shape of input : (batch_size, in_seq_len)
+        shape of output: (batch_size, out_seq_len)
+        """
+        params = self.linear(x)
+        a_sin = params[:, :self.n_sin]
+        w_sin = params[:, self.n_sin:2 * self.n_sin]
+        a_cos = params[:, 2 * self.n_sin:2 * self.n_sin + self.n_cos]
+        w_cos = params[:, 2 * self.n_sin + self.n_cos:-1]
+
+        future_t_batched = torch.stack([self.future_t] * x.shape[0])
+        y = torch.zeros_like(future_t_batched)
+        # torch.Tensor.unsqueeze(1) map shape (batch_size) to (batch_size, 1)
+        for i in range(self.n_sin):
+            y += a_sin[:, i].unsqueeze(1) * torch.sin(
+                    w_sin[:, i].unsqueeze(1) * future_t_batched)
+            y += a_cos[:, i].unsqueeze(1) * torch.cos(
+                    w_cos[:, i].unsqueeze(1) * future_t_batched)
+        y += params[:, -1].unsqueeze(1)
+        return y

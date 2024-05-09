@@ -7,11 +7,11 @@ from itertools import chain
 import torch
 import torch.optim as optim
 
-from models import OneLinear, BinarizedLinear
+import models
 from dataloader import load_data
 
 
-def train(model, data, device, optimizer):
+def train(model, data, loss_func, device, optimizer):
     model.train()
     total_loss = 0
     for X, Y in data:
@@ -19,7 +19,7 @@ def train(model, data, device, optimizer):
 
         # Forward pass
         pred = model(X)
-        loss = _neg_pnl_loss(pred, Y)
+        loss = loss_func(pred, Y)
 
         # Backward pass and optimize
         optimizer.zero_grad()
@@ -32,7 +32,7 @@ def train(model, data, device, optimizer):
     return avg_loss
 
 
-def validate(model, data, device):
+def validate_crypto(model, data, device):
     model.eval()
     pnl = []
     preds = []
@@ -49,6 +49,23 @@ def validate(model, data, device):
     targets = list(chain.from_iterable(targets))
 
     return pnl, preds, targets
+
+
+def validate(model, data, loss_func, device, checkpoint):
+    model.eval()
+    total_loss = 0
+    preds = []
+    with torch.no_grad():
+        for X, Y in data:
+            X, Y = X.to(device), Y.to(device)
+            pred = model(X)
+            loss = loss_func(pred, Y)
+            total_loss += loss.item()
+
+            preds.append(list(pred.cpu().squeeze().numpy()))
+    avg_loss = total_loss / len(data)
+    checkpoint["val_preds"] = preds  # only save the last ts_index preds
+    return avg_loss
 
 
 def test(model, data, device):
@@ -76,7 +93,7 @@ def _val_pnl(pred, y):
     return list(torch.sum(pred * y, dim=1).numpy())
 
 
-def run(i: int, use_wandb: bool):
+def run_crypto(i: int, use_wandb: bool):
     if use_wandb:
         wandb.init(project='BNN', entity='edgesky',
                    name=f'real-data-seed-{i}', reinit=True)
@@ -85,15 +102,14 @@ def run(i: int, use_wandb: bool):
         config = json.load(f)
         in_seq_len = config["data"]["in_seq_len"]
         out_seq_len = config["data"]["out_seq_len"]
-        assets = config["data"]["assets_for_preprocess"]
+        assets = config["data"]["ts_for_preprocess"]
 
         num_epochs = config["train"]["num_epochs"]
         learning_rate = config["train"]["learning_rate"]
         saved_epoch = config["train"]["saved_epoch"]
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = BinarizedLinear(in_seq_len, out_seq_len).to(device)
-    # model = Naive().to(device)
+    model = models.AdaFunc(in_seq_len, out_seq_len).to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     starting_epoch = 0
 
@@ -127,7 +143,7 @@ def run(i: int, use_wandb: bool):
                 continue
 
             train_loss = train(model, train_data[asset], device, optimizer)
-            val_pnl, val_preds, val_targets = validate(
+            val_pnl, val_preds, val_targets = validate_crypto(
                     model, val_data[asset], device)
             total_val_pnl = sum(val_pnl)
 
@@ -157,4 +173,74 @@ def run(i: int, use_wandb: bool):
 
     if use_wandb:
         wandb.finish()
+    print(f"Training finished in {time() - train_start_time:.2f} seconds")
+
+
+def run_monash():
+    with open("config.json") as f:
+        config = json.load(f)
+        in_seq_len = config["data"]["in_seq_len"]
+        out_seq_len = config["data"]["out_seq_len"]
+        ts_name_list = config["data"]["ts_for_preprocess"]
+
+        model_name = config["train"]["model_name"]
+        num_epochs = config["train"]["num_epochs"]
+        learning_rate = config["train"]["learning_rate"]
+        loss_func_str = config["train"]["loss_func"]
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    if loss_func_str == "pnl":
+        loss_func = _neg_pnl_loss
+    elif loss_func_str == "mse":
+        loss_func = torch.nn.MSELoss()
+
+    if model_name == 'OneLinear':
+        model = models.OneLinear(in_seq_len, out_seq_len).to(device)
+    elif model_name == 'AdaFunc':
+        model = models.AdaFunc(in_seq_len, out_seq_len).to(device)
+
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    starting_epoch = 0
+
+    train_data, val_data, test_data, zero_shot_data = load_data()
+    train_start_time = time()
+    for epoch in range(starting_epoch, num_epochs):
+        checkpoint = {"epoch": epoch}
+        epoch_start_time = time()
+        train_loss = 0
+        val_loss = 0
+        for ts_name in ts_name_list:
+            if len(train_data[ts_name]) == 0 or len(val_data[ts_name]) == 0:
+                continue
+
+            for ts_index in range(len(train_data[ts_name])):
+                train_loss += train(
+                        model, train_data[ts_name][ts_index], loss_func,
+                        device, optimizer)
+                val_loss += validate(
+                        model, val_data[ts_name][ts_index], loss_func,
+                        device, checkpoint)
+
+        train_loss /= len(ts_name_list)
+        train_loss /= len(train_data[ts_name])
+        val_loss /= len(ts_name_list)
+        val_loss /= len(val_data[ts_name])
+        # if epoch % 10 == 0:
+        print(
+            f"Epoch {epoch:>5},      "
+            f"Train Loss: {train_loss:>10.5f},  "
+            f"Val Loss: {val_loss:>10.5f}"
+        )
+        print(f"Epoch {epoch:>5} finished in "
+              f"{time() - epoch_start_time:.2f} seconds")
+
+        checkpoint.update({
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "train_loss": train_loss,
+            "val_loss": val_loss,
+        })
+        torch.save(checkpoint, f"checkpoints/{model_name}_epoch_{epoch}.pt")
+
     print(f"Training finished in {time() - train_start_time:.2f} seconds")
